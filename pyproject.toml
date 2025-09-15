@@ -25,6 +25,11 @@ source = "uv-dynamic-versioning"
 [tool.hatch.build.hooks.version]
 path = "src/lambda_otel_logging/_version.py"
 
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
 
 [tool.ruff.lint]
 ignore = ["E501", "UP006", "FA100", "N803", "UP035", "UP007"]

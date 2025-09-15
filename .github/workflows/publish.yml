@@ -20,6 +20,4 @@ jobs:
         with:
           version: "0.8.17"
       - run: uv build
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
+      - run: uv publish --index=testpypi
