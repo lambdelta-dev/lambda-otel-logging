@@ -20,4 +20,4 @@ jobs:
         with:
           version: "0.8.17"
       - run: uv build
-      - run: uv publish --index=testpypi
+      - run: uv publish
