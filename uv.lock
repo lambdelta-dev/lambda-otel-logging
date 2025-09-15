@@ -82,7 +82,6 @@ wheels = [
 
 [[package]]
 name = "lambda-otel-logging"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "msgspec" },
