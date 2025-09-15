@@ -105,7 +105,22 @@ def basic_config(
     level: str = "INFO",
     formatter: logging.Formatter | None = None,
     set_level_on: dict[str, Sequence[str]] | None = None,
-) -> None:
+) -> logging.Logger:
+    """Basic configuration of the logger
+
+    Will remove all other handlers from the root logger and install
+    the log_record_factory and OpenTelemetryLogFormatter.
+
+    A single new StreamHandler is added.
+
+    Args:
+        level (str, optional): Level to set on the root logger. Defaults to "INFO".
+        formatter (logging.Formatter | None, optional): Optional other log formatter to use instead. Defaults to None.
+        set_level_on (dict[str, Sequence[str]] | None, optional): Dictionary with logger you want to configure the log level on. Defaults to None.
+
+    Returns:
+        logging.Logger: The updated root logger
+    """
     logging.setLogRecordFactory(log_record_factory)
 
     root = logging.getLogger()
