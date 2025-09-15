@@ -8,3 +8,7 @@ Trying to use a collector in AWS lambda runtime is stupid and doing so for [logg
 So the goal is simple:
 
 - Write stuff that looks like OpenTelemetry, but uses AWS native services instead.
+
+If you want a full collectorless and performant solution,
+probably look at https://github.com/dev7a/serverless-otlp-forwarder
+but if you just want to look like otel for log alerting, you can use this logging formatter.

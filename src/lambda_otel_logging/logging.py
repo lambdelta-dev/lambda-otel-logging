@@ -67,8 +67,17 @@ class OpenTelemetryLogFormatter(logging.Formatter):
 
 
 def log_record_factory(
-    name, level, fn, lno, msg, args, exc_info, func=None, sinfo=None, **kwargs
-):
+    name,  # noqa: ANN001
+    level,  # noqa: ANN001
+    fn,  # noqa: ANN001
+    lno,  # noqa: ANN001
+    msg,  # noqa: ANN001
+    args,  # noqa: ANN001
+    exc_info,  # noqa: ANN001
+    func=None,  # noqa: ANN001
+    sinfo=None,  # noqa: ANN001
+    **kwargs,  # noqa: ANN003
+) -> logging.LogRecord:
     """Copy context we want to keep to the log record"""
     record = logging.LogRecord(
         name, level, fn, lno, msg, args, exc_info, func, sinfo, **kwargs
@@ -96,7 +105,7 @@ def basic_config(
     level: str = "INFO",
     formatter: logging.Formatter | None = None,
     set_level_on: dict[str, Sequence[str]] | None = None,
-):
+) -> None:
     logging.setLogRecordFactory(log_record_factory)
 
     root = logging.getLogger()

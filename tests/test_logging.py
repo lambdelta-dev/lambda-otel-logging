@@ -1,15 +1,16 @@
 import logging
 
 import msgspec
-
-from lambda_otel_logging.logging import basic_config, OpenTelemetryLogFormatter
+import pytest
 from opentelemetry import trace
+
+from lambda_otel_logging.logging import OpenTelemetryLogFormatter, basic_config
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
 
 
-def test_formatter_should_format_normal_log_records():
+def test_formatter_should_format_normal_log_records() -> None:
     formatter = OpenTelemetryLogFormatter()
     msg = formatter.format(
         logging.LogRecord(
@@ -27,7 +28,7 @@ def test_formatter_should_format_normal_log_records():
     assert "Testing message" in decoded["body"]
 
 
-def test_logging_happy(capsys) -> None:
+def test_logging_happy(capsys: pytest.CaptureFixture[str]) -> None:
     logger = basic_config()
 
     logger.info("test message")
