@@ -1,10 +1,22 @@
 import logging
 from collections.abc import Sequence
+from typing import Literal, TypeAlias
 
 import msgspec
 from opentelemetry.trace import SpanContext, get_current_span
 
 logger = logging.getLogger(__name__)
+
+LoggingLevel: TypeAlias = (
+    Literal["CRITICAL"]
+    | Literal["FATAL"]
+    | Literal["ERROR"]
+    | Literal["WARN"]
+    | Literal["WARNING"]
+    | Literal["INFO"]
+    | Literal["DEBUG"]
+    | Literal["NOTSET"]
+)
 
 
 def log_level_to_severity_number(level: int) -> int:
@@ -19,11 +31,11 @@ def log_level_to_severity_number(level: int) -> int:
     # https://docs.python.org/3/library/logging.html#logging-levels
     # https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-severitynumber
     if level >= logging.CRITICAL:
-        return 24  # FATAL
+        return 21  # FATAL
     elif level >= logging.ERROR:
-        return 16  # ERROR
+        return 17  # ERROR
     elif level >= logging.WARNING:
-        return 12  # WARN
+        return 13  # WARN
     elif level >= logging.INFO:
         return 9  # INFO
     elif level >= logging.DEBUG:
@@ -102,9 +114,9 @@ def log_record_factory(
 
 
 def basic_config(
-    level: str = "INFO",
+    level: LoggingLevel = "INFO",
     formatter: logging.Formatter | None = None,
-    set_level_on: dict[str, Sequence[str]] | None = None,
+    set_level_on: dict[LoggingLevel, Sequence[str]] | None = None,
 ) -> logging.Logger:
     """Basic configuration of the logger
 

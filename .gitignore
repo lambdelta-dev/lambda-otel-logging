@@ -10,3 +10,4 @@ wheels/
 .venv
 /tmp
 src/lambda_otel_logging/_version.py
+/.vscode
