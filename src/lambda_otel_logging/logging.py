@@ -31,11 +31,11 @@ def log_level_to_severity_number(level: int) -> int:
     # https://docs.python.org/3/library/logging.html#logging-levels
     # https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-severitynumber
     if level >= logging.CRITICAL:
-        return 24  # FATAL
+        return 21  # FATAL
     elif level >= logging.ERROR:
-        return 16  # ERROR
+        return 17  # ERROR
     elif level >= logging.WARNING:
-        return 12  # WARN
+        return 13  # WARN
     elif level >= logging.INFO:
         return 9  # INFO
     elif level >= logging.DEBUG:
