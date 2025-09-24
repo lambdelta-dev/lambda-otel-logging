@@ -1,4 +1,4 @@
-AWS Lambda OptenTelemetry Logging
+AWS Lambda OpenTelemetry Logging
 ===============================
 
 Simple log formatter to get Otel log records on stdout in an AWS lambda.
