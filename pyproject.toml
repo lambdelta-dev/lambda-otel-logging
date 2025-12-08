@@ -16,7 +16,11 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pre-commit>=4.3.0", "pytest>=8.4.2"]
+dev = [
+    "botocore>=1.42.4",
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+]
 
 [build-system]
 requires = ["hatchling", "uv-dynamic-versioning"]

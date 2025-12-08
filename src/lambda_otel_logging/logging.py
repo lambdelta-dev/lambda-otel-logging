@@ -2,7 +2,7 @@ import logging
 from collections.abc import Sequence
 from typing import Literal, TypeAlias
 
-import msgspec
+from msgspec.json import encode as json_encode
 from opentelemetry.trace import SpanContext, get_current_span
 
 logger = logging.getLogger(__name__)
@@ -50,6 +50,9 @@ class OpenTelemetryLogFormatter(logging.Formatter):
         otel_context = record.__dict__.pop("otel_context", {})
         body = record.msg % record.args if record.args else record.msg
 
+        if not isinstance(body, str):
+            body = repr(body)
+
         extra_attributes: dict[str, str] = record.__dict__.pop("otel_attributes", {})
 
         if record.exc_info:
@@ -75,7 +78,7 @@ class OpenTelemetryLogFormatter(logging.Formatter):
                 **extra_attributes,
             },
         }
-        return msgspec.json.encode(record_dict).decode("utf-8")
+        return json_encode(record_dict).decode("utf-8")
 
 
 def log_record_factory(

@@ -1,8 +1,13 @@
 import logging
+from unittest.mock import MagicMock, patch
 
 import msgspec
 import pytest
+from botocore.exceptions import (
+    DataNotFoundError,
+)
 from opentelemetry import trace
+from pytest import CaptureFixture
 
 from lambda_otel_logging.logging import OpenTelemetryLogFormatter, basic_config
 
@@ -51,3 +56,28 @@ def test_logging_happy(capsys: pytest.CaptureFixture[str]) -> None:
     assert "test error" in captured
     assert "test exception" in captured
     assert "ZeroDivisionError" in captured
+
+
+@patch("lambda_otel_logging.logging.json_encode")
+def test_should_log_body_as_string(mock_encode: MagicMock) -> None:
+    # Patch msgspec.json.encode to see if body is a string
+    logger = basic_config()
+    exp = DataNotFoundError(data_path="asdf")
+    logger.info(exp)
+    mock_encode.assert_called()
+
+    # Get the first argument of the first call
+    record_dict = mock_encode.call_args[0][0]
+    assert isinstance(record_dict, dict)
+    assert isinstance(record_dict["body"], str)
+
+
+def test_should_log_object(capsys: CaptureFixture) -> None:
+    # Patch msgspec.json.encode to see if body is a string
+    logger = basic_config()
+    exp = DataNotFoundError(data_path="asdf")
+    logger.info(exp)
+    captured = capsys.readouterr()
+    assert (
+        "Encoding objects of type DataNotFoundError is unsupported" not in captured.err
+    )
