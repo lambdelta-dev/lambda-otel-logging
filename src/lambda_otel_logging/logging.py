@@ -7,6 +7,13 @@ from opentelemetry.trace import SpanContext, get_current_span
 
 logger = logging.getLogger(__name__)
 
+_STANDARD_LOG_RECORD_KEYS = frozenset(
+    logging.LogRecord(
+        name="", level=0, pathname="", lineno=0, msg="", args=(), exc_info=None
+    ).__dict__.keys()
+)
+
+
 LoggingLevel: TypeAlias = (
     Literal["CRITICAL"]
     | Literal["FATAL"]
@@ -55,6 +62,11 @@ class OpenTelemetryLogFormatter(logging.Formatter):
 
         extra_attributes: dict[str, str] = record.__dict__.pop("otel_attributes", {})
 
+        # Capture any extra attributes passed via logger.info(..., extra={...})
+        for key, value in record.__dict__.items():
+            if key not in _STANDARD_LOG_RECORD_KEYS and key not in extra_attributes:
+                extra_attributes[key] = value if isinstance(value, str) else repr(value)
+
         if record.exc_info:
             extra_attributes["exception.stacktrace"] = (
                 logging.Formatter().formatException(record.exc_info)
@@ -72,10 +84,10 @@ class OpenTelemetryLogFormatter(logging.Formatter):
                 "name": record.name,
             },
             "attributes": {
+                **extra_attributes,
                 "code.file.path": record.pathname,
                 "code.line.number": record.lineno,
                 "code.function.name": record.funcName,
-                **extra_attributes,
             },
         }
         return json_encode(record_dict).decode("utf-8")

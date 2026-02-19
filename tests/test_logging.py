@@ -81,3 +81,21 @@ def test_should_log_object(capsys: CaptureFixture) -> None:
     assert (
         "Encoding objects of type DataNotFoundError is unsupported" not in captured.err
     )
+
+
+def test_extra_attributes_included_in_log(capsys: CaptureFixture) -> None:
+    """Test that extra= kwargs are included in the structured log attributes."""
+    logger = basic_config()
+    logger.info(
+        "test message with extras",
+        extra={"user.id": "123", "request.id": "abc-456", "count": 42},
+    )
+
+    captured = capsys.readouterr()
+    output = captured.err + captured.out
+    decoded = msgspec.json.decode(output.strip())
+
+    assert decoded["body"] == "test message with extras"
+    assert decoded["attributes"]["user.id"] == "123"
+    assert decoded["attributes"]["request.id"] == "abc-456"
+    assert decoded["attributes"]["count"] == "42"  # Non-strings are repr'd
